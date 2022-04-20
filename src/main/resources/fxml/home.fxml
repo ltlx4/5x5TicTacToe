@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2B2B2BFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.controllers.HomeController">
+   <right>
+      <VBox prefWidth="112.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="startButton" mnemonicParsing="false" onAction="#handlePlay" prefHeight="120.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="Start" textFill="#2b2b2b">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="DejaVu Sans Bold" size="21.0" />
+               </font>
+            </Button>
+            <Button fx:id="historyButton" mnemonicParsing="false" onAction="#handleHistory" prefHeight="120.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="History" textFill="#b5b5b5">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="DejaVu Sans Bold" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#handleQuit" prefHeight="120.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="Quit" textFill="#f54b4b">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="DejaVu Serif Bold" size="23.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </right>
+   <center>
+      <VBox maxHeight="160.0" maxWidth="303.0" prefHeight="290.0" prefWidth="395.0" style="-fx-alignment: center;" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Red Player" textFill="#e13734">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="FreeSerif Bold" size="30.0" />
+               </font>
+            </Label>
+            <TextField fx:id="playerOne" maxWidth="300.0" prefWidth="200.0" promptText="Player Name">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TextField>
+            <Label text="Blue Player" textFill="#5a9aee">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="FreeSerif Bold" size="30.0" />
+               </font>
+            </Label>
+            <TextField fx:id="playerTwo" maxWidth="300.0" prefWidth="200.0" promptText="Player Name" />
+            <Label fx:id="missingField" textFill="#ff0808">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Text fill="#b5b5b5" strokeType="OUTSIDE" strokeWidth="0.0" text="Red plays first!">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Text>
+         </children>
+         <BorderPane.margin>
+            <Insets left="48.0" top="1.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+</BorderPane>
