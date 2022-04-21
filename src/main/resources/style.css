@@ -1,8 +1,8 @@
 .square {
     -fx-border-style: solid;
     -fx-border-color: silver;
+    -fx-border-radius: 20px;
 }
 .selected {
-    -fx-background-color: silver;
     -fx-border-color: black;
 }

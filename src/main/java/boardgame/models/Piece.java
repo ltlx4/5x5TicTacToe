@@ -26,10 +26,6 @@ public class Piece {
         position.set(newPosition);
     }
 
-    public ObjectProperty<Position> positionProperty() {
-        return position;
-    }
-
     public String toString() {
         return type.toString() + position.get().toString();
     }
