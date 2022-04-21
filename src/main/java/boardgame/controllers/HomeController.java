@@ -12,8 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
+/**
+ * HomeController class is the controller for the home screen.
+ * It handles the Players input and starts the game.
+ */
 public class HomeController {
     @FXML
     TextField playerOne;
@@ -30,21 +37,33 @@ public class HomeController {
     @FXML
     FXMLLoader loader = new FXMLLoader();
 
+    private static final Logger logger = LogManager.getLogger();
+
+
+
     @FXML
     public void handlePlay(ActionEvent event) throws IOException {
         if (playerOne == null || playerTwo == null || playerOne.getText().isEmpty() || playerTwo.getText().isEmpty()) {
             missingField.setText("Please fill in both fields");
+            logger.error("Missing fields");
         } else {
+            String redPlayer = playerOne.getText();
+            String bluePlayer = playerTwo.getText();
             loader.setLocation(getClass().getResource("/fxml/game.fxml"));
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root = loader.load();
+            GameController gameController = loader.getController();
+            gameController.displayNames(redPlayer, bluePlayer);
             stage.setScene(new Scene(root));
+            logger.info("Game started!");
         }
     }
 
     @FXML
     public void handleQuit(ActionEvent event) {
         Platform.exit();
+        logger.info("Game quit");
     }
 
     @FXML
