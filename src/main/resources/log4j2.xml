@@ -24,14 +24,14 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="ALL">
+        <Root level="TRACE">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File1"/>
             <AppenderRef ref="File2"/>
             <AppenderRef ref="File3"/>
             <AppenderRef ref="File4"/>
         </Root>
-        <Logger name="boardgame.Main" additivity="true">
+        <Logger name="boardgame.Main" additivity="true" level="TRACE">
             <AppenderRef ref="STDOUT"/>
         </Logger>
     </Loggers>
