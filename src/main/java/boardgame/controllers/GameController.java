@@ -1,8 +1,6 @@
 package boardgame.controllers;
 
-import boardgame.models.Direction;
-import boardgame.models.PawnDirection;
-import boardgame.models.Position;
+import boardgame.models.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,7 +31,15 @@ public class GameController {
     @FXML
     Button blueLabel;
 
+
+    private Player RedPlayer;
+    private Player BluePlayer;
+    private String winner;
+
     private static final Logger logger = LogManager.getLogger();
+
+
+    private GameModel model = new GameModel(RedPlayer, BluePlayer);
 
     @FXML
     public void quitHandler(ActionEvent event) {
@@ -61,6 +67,7 @@ public class GameController {
      */
     @FXML
     private void initialize() {
+        model = new GameModel();
         for (int i = 0; i < board.getRowCount(); i++) {
             for (int j = 0; j < board.getColumnCount(); j++) {
                 var square = createSquare();
@@ -262,6 +269,14 @@ public class GameController {
         redLabel.setText(name1);
         blueLabel.setText(name2);
     }
+
+    private void setPlayers(String redPlayer, String bluePlayer) {
+        Piece redPiece = new Piece(PieceType.RED);
+        Piece bluePiece = new Piece(PieceType.BLUE);
+        RedPlayer = new Player(redPlayer, redPiece);
+        BluePlayer = new Player(bluePlayer, bluePiece);
+    }
+
 
     /**
      * Returns stack pane shaped like a square with a circle inside

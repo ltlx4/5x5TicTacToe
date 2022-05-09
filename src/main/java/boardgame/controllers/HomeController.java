@@ -1,5 +1,9 @@
 package boardgame.controllers;
 
+import boardgame.models.Piece;
+import boardgame.models.PieceType;
+import boardgame.models.Player;
+import boardgame.models.Position;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,10 +59,17 @@ public class HomeController {
             Parent root = loader.load();
             GameController gameController = loader.getController();
             gameController.displayNames(redPlayer, bluePlayer);
+            setPlayers(redPlayer, bluePlayer);
             stage.setScene(new Scene(root));
             logger.info("Game started!");
         }
     }
+
+
+
+
+
+
 
     @FXML
     public void handleQuit(ActionEvent event) {

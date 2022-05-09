@@ -8,6 +8,10 @@ public class Piece {
     private final PieceType type;
     private final ObjectProperty<Position> position = new SimpleObjectProperty<>();
 
+    public Piece(PieceType type) {
+        this.type = type;
+    }
+
     public Piece(PieceType type, Position position) {
         this.type = type;
         this.position.set(position);

@@ -3,13 +3,26 @@ package boardgame.models;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
 public class GameModel {
 
     public static int BOARD_SIZE = 5;
 
     private ReadOnlyObjectWrapper<Piece>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
 
-    public GameModel() {
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
+
+
+
+    private ReadOnlyObjectWrapper<Player> redPlayer = new ReadOnlyObjectWrapper<>();
+    private ReadOnlyObjectWrapper<Player> bluePlayer = new ReadOnlyObjectWrapper<>();
+
+
+    public GameModel(Player redPlayer, Player bluePlayer) {
+        this.redPlayer.set(redPlayer);
+        this.bluePlayer.set(bluePlayer);
         for (var i = 0; i < BOARD_SIZE; i++) {
             for (var j = 0; j < BOARD_SIZE; j++) {
                 var pos = new Position(i, j);
@@ -17,6 +30,7 @@ public class GameModel {
             }
         }
     }
+
 
     public ReadOnlyObjectProperty<Piece> squareProperty(int i, int j) {
         return board[i][j].getReadOnlyProperty();
@@ -50,6 +64,7 @@ public class GameModel {
 
     public static void main(String[] args) {
         var model = new GameModel();
+        model.click(0, 0);
         System.out.println(model);
         System.out.println(model.getPiece(0, 0).getType());
     }
