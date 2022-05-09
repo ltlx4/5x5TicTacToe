@@ -67,7 +67,6 @@ public class GameController {
      */
     @FXML
     private void initialize() {
-        model = new GameModel();
         for (int i = 0; i < board.getRowCount(); i++) {
             for (int j = 0; j < board.getColumnCount(); j++) {
                 var square = createSquare();

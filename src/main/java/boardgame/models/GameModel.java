@@ -63,10 +63,6 @@ public class GameModel {
     }
 
     public static void main(String[] args) {
-        var model = new GameModel();
-        model.click(0, 0);
-        System.out.println(model);
-        System.out.println(model.getPiece(0, 0).getType());
     }
 
 }

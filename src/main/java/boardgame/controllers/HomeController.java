@@ -59,7 +59,6 @@ public class HomeController {
             Parent root = loader.load();
             GameController gameController = loader.getController();
             gameController.displayNames(redPlayer, bluePlayer);
-            setPlayers(redPlayer, bluePlayer);
             stage.setScene(new Scene(root));
             logger.info("Game started!");
         }
