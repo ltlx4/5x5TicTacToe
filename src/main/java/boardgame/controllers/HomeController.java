@@ -44,7 +44,11 @@ public class HomeController {
     private static final Logger logger = LogManager.getLogger();
 
 
-
+    /**
+     * Handles the play button.
+     * @param event the event that triggered the method.
+     * @throws IOException if the FXML file is not found.
+     */
     @FXML
     public void handlePlay(ActionEvent event) throws IOException {
         if (playerOne == null || playerTwo == null || playerOne.getText().isEmpty() || playerTwo.getText().isEmpty()) {
@@ -65,17 +69,21 @@ public class HomeController {
     }
 
 
-
-
-
-
-
+    /**
+     * Handles the quit button.
+     * @param event the event that triggered the method.
+     */
     @FXML
     public void handleQuit(ActionEvent event) {
         Platform.exit();
         logger.info("Game quit");
     }
 
+    /**
+     * Handles the history button.
+     * @param event the event that triggered the method.
+     * @throws IOException if the FXML file is not found.
+     */
     @FXML
     public void handleHistory(ActionEvent event) throws IOException {
         loader.setLocation(getClass().getResource("/fxml/history.fxml"));

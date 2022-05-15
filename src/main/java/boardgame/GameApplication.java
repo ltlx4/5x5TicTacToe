@@ -8,6 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The GameApplication class.
+ */
 public class GameApplication extends Application {
 
     @Override
@@ -19,6 +22,11 @@ public class GameApplication extends Application {
         stage.show();
     }
 
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
         launch();
     }

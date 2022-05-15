@@ -2,6 +2,7 @@ package boardgame.controllers;
 
 import boardgame.models.*;
 import javafx.application.Platform;
+import javafx.beans.binding.ObjectBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,23 +26,18 @@ public class GameController {
 
     @FXML
     private GridPane board;
-
     @FXML
-    Button redLabel;
-
+    private Button redLabel;
     @FXML
-    Button blueLabel;
+    private Button blueLabel;
 
-
-    private Player RedPlayer;
-    private Player BluePlayer;
-    private String winner;
-
+    private GameModel model = new GameModel();
     private static final Logger logger = LogManager.getLogger();
 
-
-    private GameModel model = new GameModel(RedPlayer, BluePlayer);
-
+    /**
+     * Quits the game.
+     * @param event event that triggered the method
+     */
     @FXML
     public void quitHandler(ActionEvent event) {
         Platform.exit();
@@ -48,7 +45,7 @@ public class GameController {
 
 
     /**
-     * Returns square in the board that corresponds to the position
+     * Returns square in the board that corresponds to the position.
      * @param position position of the square
      * @return square in the board that corresponds to the position
      */
@@ -67,12 +64,14 @@ public class GameController {
      */
     @FXML
     private void initialize() {
+        model = new GameModel();
         for (int i = 0; i < board.getRowCount(); i++) {
             for (int j = 0; j < board.getColumnCount(); j++) {
-                var square = createSquare();
+                var square = createSquare(i, j);
                 board.add(square, j, i);
             }
         }
+        redLabel.setStyle("-fx-background-color: #c51f1f");
         logger.warn("Board initialized successfully");
     }
 
@@ -83,60 +82,25 @@ public class GameController {
         var col = GridPane.getColumnIndex(square);
         logger.info("Click on square ({},{})", row, col);
         square.getStyleClass().add("selected");
-        var coin = (Circle) square.getChildren().get(0);
-        var stepColor = nextColor((Color) coin.getFill());
-        coin.setFill(stepColor);
-        gameFinished(new Position(row, col), stepColor);
-    }
-
-    /**
-     * Checks if a column has 3 occurrences of the same color
-     * @param col column to check
-     * @param color color of the piece
-     * @return boolean true if the column has 3 occurrences of the same color
-     */
-    private boolean checkCol(int col, Color color) {
-        int count = 0;
-        for (int row = 0; row < board.getRowCount(); row++) {
-            var square = getSquare(new Position(row, col));
-            var piece = (Circle) square.getChildren().get(0);
-            if (piece.getFill() == color) {
-                count++;
-            }else
-                count = 0;
-            if (count == 3) {
-                logger.info("Column {} has 3 occurrences of the same color", col);
-                return true;
+        model.click(row, col);
+        if (model.gameOver(new Position(row, col), model.squareProperty(row, col).get().getType())) {
+            gameFinished(nextColor());
+        } else {
+            if (model.getMoveCount() % 2 ==0 ) {
+                redLabel.setStyle("-fx-background-color: #c51f1f");
+                blueLabel.setStyle("-fx-background-color: #27374d");
+            } else {
+                blueLabel.setStyle("-fx-background-color: #3369ce");
+                redLabel.setStyle("-fx-background-color: #27374d");
             }
         }
-        return false;
+
     }
 
-    /**
-     * Checks if a row has 3 occurrences of the same color
-     * @param row row to check
-     * @param color color of the piece
-     * @return boolean true if the row has 3 occurrences of the same color
-     */
-    private boolean checkRow(int row, Color color) {
-        int count = 0;
-        for (int col = 0; col < board.getColumnCount(); col++) {
-            var square = getSquare(new Position(row, col));
-            var piece = (Circle) square.getChildren().get(0);
-            if (piece.getFill() == color) {
-                count++;
-            }else
-                count = 0;
-            if (count == 3) {
-                logger.info("Row {} has 3 occurrences of the same color", row);
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     /**
-     * Checks if the Position is in the board
+     * Checks if the Position is in the board.
      * @param position position to check
      * @return boolean true if the position is in the board
      */
@@ -145,59 +109,9 @@ public class GameController {
                 && 0 <= position.col() && position.col() < 5;
     }
 
-    /**
-     * Checks far Positions from the Position for diagonal
-     * @param position the Position to check
-     * @param color color of the coin
-     * @return boolean true if the diagonal has 3 occurrences of the same color
-     */
-    private boolean checkLongDiagonal(Position position, Color color){
-        for (Direction d : PawnDirection.values()) {
-            Position temp = position.moveTo(d);
-            if (isOnBoard(temp)) {
-                var square = getSquare(temp);
-                var piece = (Circle) square.getChildren().get(0);
-                if (piece.getFill() == color) {
-                    if (isOnBoard(temp.moveTo(d))) {
-                        var square3 = getSquare(temp.moveTo(d));
-                        var piece3 = (Circle) square3.getChildren().get(0);
-                        if (piece3.getFill() == color) {
-                            logger.info("Diagonal has 3 occurrences of the same color");
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     /**
-     * Checks near Positions from the Position for diagonal
-     * @param position the Position to check
-     * @param color color of the coin
-     * @return boolean true if the diagonal has 3 occurrences of the same color
-     */
-    private boolean checkShortDiagonal(Position position, Color color){
-        Position position1 = position.moveTo(PawnDirection.UP_LEFT);
-        Position position2 = position.moveTo(PawnDirection.DOWN_RIGHT);
-        Position position3 = position.moveTo(PawnDirection.UP_RIGHT);
-        Position position4 = position.moveTo(PawnDirection.DOWN_LEFT);
-        if (checkShortCells(color, position1, position2)) {
-            logger.info("Diagonal has 3 occurrences of the same color");
-            return true;
-        }
-        else if (checkShortCells(color, position3, position4)) {
-            logger.info("Diagonal has 3 occurrences of the same color");
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the neighboring cells the same color
+     * Checks if the neighboring cells the same color.
      * @param color color of the stone
      * @param position1 first position to check
      * @param position2 second position to check
@@ -219,16 +133,13 @@ public class GameController {
 
     /**
      * Checks if the game is over and disables the board if it is.
-     * @param position the last position entered to check
      * @param color the color of the last stone
      */
-    private void gameFinished(Position position, Color color) {
-        if (checkCol(position.col(), color) || checkRow(position.row(), color)
-                || checkLongDiagonal(position, color) || checkShortDiagonal(position, color)) {
+    private void gameFinished(Color color) {
             logger.info("Game over");
             board.setDisable(true);
-            if (color == Color.RED) {
-                redLabel.setStyle("-fx-background-color: #ffd802;");
+            if (color == Color.BLUE) {
+                redLabel.setStyle("-fx-background-color: #ffd802");
                 logger.info("{} wins", redLabel.getText());
 
             }
@@ -237,30 +148,24 @@ public class GameController {
                 logger.info("{} wins", blueLabel.getText());
             }
         }
-    }
 
 
     /**
-     * returns the next color of the stone
-     * @param color the color of the last stone
+     * Returns the next color of the stone.
      * @return Color the next color of the stone
      */
-    private Color nextColor(Color color) {
-        if (color == Color.TRANSPARENT) {
-            logger.debug("Changing color to red");
+    private Color nextColor() {
+        if (model.getMoveCount() % 2 == 0) {
             return Color.RED;
         }
-        if (color == Color.RED) {
-            logger.debug("Changing color to blue");
+        else {
             return Color.BLUE;
         }
-        logger.debug("Changing color to transparent");
-        return Color.TRANSPARENT;
     }
 
 
     /**
-     * Sets the name of the players
+     * Sets the name of the players.
      * @param name1 String of the first player
      * @param name2 String of the second player
      */
@@ -269,25 +174,36 @@ public class GameController {
         blueLabel.setText(name2);
     }
 
-    private void setPlayers(String redPlayer, String bluePlayer) {
-        Piece redPiece = new Piece(PieceType.RED);
-        Piece bluePiece = new Piece(PieceType.BLUE);
-        RedPlayer = new Player(redPlayer, redPiece);
-        BluePlayer = new Player(bluePlayer, bluePiece);
-    }
-
 
     /**
-     * Returns stack pane shaped like a square with a circle inside
-     * @return StackPane shaped like a square with a circle inside
+     * Returns stack pane shaped like a square with a {@link Circle} inside.
+     * @param i row of the square
+     * @param j column of the square
+     * @return {@link StackPane} shaped like a square with a {@link Circle} inside
      */
-    private StackPane createSquare() {
+    private StackPane createSquare(int i, int j) {
         var square = new StackPane();
+        square.setOnMouseClicked(this::handleMouseClick);
         square.getStyleClass().add("square");
         var piece = new Circle(50);
-        piece.setFill(Color.TRANSPARENT);
+
+        piece.fillProperty().bind(
+                new ObjectBinding<>() {
+                    {
+                        super.bind(model.squareProperty(i,j));
+                    }
+                    @Override
+                    protected Paint computeValue() {
+                        return switch (model.squareProperty(i,j).get().getType()) {
+                            case EMPTY -> Color.TRANSPARENT;
+                            case RED -> Color.RED;
+                            case BLUE -> Color.BLUE;
+                        };
+                    }
+                }
+        );
+
         square.getChildren().add(piece);
-        square.setOnMouseClicked(this::handleMouseClick);
         return square;
     }
 

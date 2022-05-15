@@ -15,6 +15,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
+/**
+ * HistoryController class for the history scene.
+ */
 public class HistoryController {
 
     @FXML
@@ -24,11 +28,20 @@ public class HistoryController {
     Button backButton;
 
 
+    /**
+     * Quits the game.
+     * @param event the event that triggered the method.
+     */
     @FXML
     public void handleQuit(ActionEvent event) {
         Platform.exit();
     }
 
+    /**
+     * Goes back to the main menu.
+     * @param event the event that triggered the method.
+     * @throws IOException if the FXML file cannot be loaded.
+     */
     @FXML
     public void handleBack(ActionEvent event) throws IOException {
         loader.setLocation(getClass().getResource("/fxml/home.fxml"));
