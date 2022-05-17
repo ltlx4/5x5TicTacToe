@@ -27,7 +27,7 @@
         <maven.surefire.version>3.0.0-M6</maven.surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
         <log4j.version>2.17.2</log4j.version>
-        <exec.mainClass><!-- TODO: the main class of your application that contains the main method --></exec.mainClass>
+        <exec.mainClass>boardgame.Main</exec.mainClass>
     </properties>
     <dependencies>
         <dependency>
@@ -58,6 +58,30 @@
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
