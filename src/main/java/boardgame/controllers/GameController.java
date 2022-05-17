@@ -1,5 +1,6 @@
 package boardgame.controllers;
 
+import boardgame.Main;
 import boardgame.models.*;
 import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
@@ -12,9 +13,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-
+import com.github.javafaker.Faker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import util.JsonHelper;
+import util.result.Result;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 
 
 /**
@@ -31,7 +38,8 @@ public class GameController {
     @FXML
     private Button blueLabel;
 
-    private GameModel model = new GameModel();
+
+    private GameModel model;
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -41,21 +49,6 @@ public class GameController {
     @FXML
     public void quitHandler(ActionEvent event) {
         Platform.exit();
-    }
-
-
-    /**
-     * Returns square in the board that corresponds to the position.
-     * @param position position of the square
-     * @return square in the board that corresponds to the position
-     */
-    private StackPane getSquare(Position position) {
-        for (var child : board.getChildren()) {
-            if (GridPane.getRowIndex(child) == position.row() && GridPane.getColumnIndex(child) == position.col()) {
-                return (StackPane) child;
-            }
-        }
-        throw new AssertionError();
     }
 
 
@@ -84,7 +77,11 @@ public class GameController {
         square.getStyleClass().add("selected");
         model.click(row, col);
         if (model.gameOver(new Position(row, col), model.squareProperty(row, col).get().getType())) {
-            gameFinished(nextColor());
+            try {
+                gameFinished(nextColor());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             if (model.getMoveCount() % 2 ==0 ) {
                 redLabel.setStyle("-fx-background-color: #c51f1f");
@@ -100,54 +97,39 @@ public class GameController {
 
 
     /**
-     * Checks if the Position is in the board.
-     * @param position position to check
-     * @return boolean true if the position is in the board
-     */
-    public static boolean isOnBoard(Position position) {
-        return 0 <= position.row() && position.row() < 5
-                && 0 <= position.col() && position.col() < 5;
-    }
-
-
-    /**
-     * Checks if the neighboring cells the same color.
-     * @param color color of the stone
-     * @param position1 first position to check
-     * @param position2 second position to check
-     * @return boolean true if the cells are the same color
-     */
-    private boolean checkShortCells(Color color, Position position1, Position position2) {
-        if (isOnBoard(position1) && isOnBoard(position2)) {
-            var square1 = getSquare(position1);
-            var square2 = getSquare(position2);
-            var piece1 = (Circle) square1.getChildren().get(0);
-            var piece2 = (Circle) square2.getChildren().get(0);
-            if (piece1.getFill() == color && piece2.getFill() == color) {
-                logger.info("Diagonal has 3 occurrences of the same color");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Checks if the game is over and disables the board if it is.
      * @param color the color of the last stone
      */
-    private void gameFinished(Color color) {
+    private void gameFinished(Color color) throws IOException {
             logger.info("Game over");
             board.setDisable(true);
+            String winner;
             if (color == Color.BLUE) {
+                winner = redLabel.getText();
                 redLabel.setStyle("-fx-background-color: #ffd802");
                 logger.info("{} wins", redLabel.getText());
 
             }
             else {
+                winner = blueLabel.getText();
                 blueLabel.setStyle("-fx-background-color: #ffd802;");
                 logger.info("{} wins", blueLabel.getText());
             }
-        }
+            var faker = new Faker();
+
+            var result = Result.builder()
+                    .redName(redLabel.getText())
+                    .blueName(blueLabel.getText())
+                    .winnerName(winner)
+                    .moveCount(model.getMoveCount())
+                    .date(LocalDate.now()).build();
+            saveGameToJson(result);
+    }
+
+
+    private void saveGameToJson(Result result){
+        JsonHelper.write(result);
+    }
 
 
     /**
@@ -173,6 +155,7 @@ public class GameController {
         redLabel.setText(name1);
         blueLabel.setText(name2);
     }
+
 
 
     /**
