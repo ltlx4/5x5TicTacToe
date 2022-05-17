@@ -2,40 +2,47 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2B2B2BFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boardgame.controllers.HistoryController">
    <right>
       <VBox prefHeight="200.0" prefWidth="112.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="Button">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="DejaVu Sans Bold" size="18.0" />
-               </font>
-            </Button>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="Back" textFill="#b5b5b5">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="DejaVu Sans Bold" size="18.0" />
-               </font>
-            </Button>
-            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#handleQuit" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #3E68A0FF;" text="Quit" textFill="#ff3434">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="DejaVu Sans Bold" size="24.0" />
-               </font>
-            </Button>
-         </children>
+         <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="200.0" prefWidth="100.0"
+                 style="-fx-background-color: #3E68A0FF;" text="Back" textFill="#b5b5b5">
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </VBox.margin>
+            <font>
+               <Font name="DejaVu Sans Bold" size="18.0"/>
+            </font>
+         </Button>
+         <Button mnemonicParsing="false" onAction="#handleQuit" prefHeight="200.0" prefWidth="100.0"
+                 style="-fx-background-color: #3E68A0FF;" text="Quit" textFill="#ff3434">
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </VBox.margin>
+            <font>
+               <Font name="DejaVu Sans Bold" size="24.0"/>
+            </font>
+         </Button>
       </VBox>
    </right>
+   <center>
+      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #2B2B2BFF;" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="redName" prefWidth="92.0" text="Red Name" />
+            <TableColumn fx:id="blueName" prefWidth="96.0" text="Blue Name" />
+            <TableColumn fx:id="winnerName" prefWidth="115.0" text="Winner" />
+            <TableColumn fx:id="movesCount" prefWidth="72.0" text="#Moves" />
+            <TableColumn fx:id="dateTime" prefWidth="113.0" text="Date" />
+         </columns>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </TableView>
+   </center>
 </BorderPane>
