@@ -1,5 +1,6 @@
 package boardgame.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,7 @@ public class GameModel {
     private final ReadOnlyObjectWrapper<Piece>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
 
     private ReadOnlyObjectWrapper<Player> currentPlayer = new ReadOnlyObjectWrapper<>();
+
     private int moveCount = 0;
 
 
@@ -35,6 +37,7 @@ public class GameModel {
                 board[i][j] = new ReadOnlyObjectWrapper<>(new Piece(PieceType.EMPTY, pos));
             }
         }
+
     }
 
 
@@ -87,6 +90,7 @@ public class GameModel {
         if (checkRow(pos.row(), type) || checkCol(pos.col(), type)
                 || checkLongDiagonal(pos, type) || checkShortDiagonal(pos, type)) {
             System.out.println(this);
+
             return true;
         }
         return false;
