@@ -59,13 +59,15 @@ public class GameModel {
     public void click(int i, int j) {
         var current = CurrentPlayer();
 
-        switch (current) {
-            case RED -> board[i][j].set(new Piece(PieceType.RED, new Position(i, j)));
-            case BLUE -> board[i][j].set(new Piece(PieceType.BLUE, new Position(i, j)));
+        if (board[i][j].get().getType() == PieceType.EMPTY) {
+            switch (current) {
+                case RED -> board[i][j].set(new Piece(PieceType.RED, new Position(i, j)));
+                case BLUE -> board[i][j].set(new Piece(PieceType.BLUE, new Position(i, j)));
+            }
+            moveCount++;
+            Position pos = new Position(i, j);
+            gameOver(pos, current);
         }
-        moveCount++;
-        Position pos = new Position(i, j);
-        gameOver(pos, current);
 
     }
 
